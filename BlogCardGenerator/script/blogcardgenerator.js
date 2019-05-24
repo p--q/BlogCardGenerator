@@ -14,23 +14,23 @@ const bookmarkletfunc = () => {
 		ogp.img = location.protocol + "//" + ogp.domain + ogp.img;
 	}
 	let root = createTree([
-					[createElem("div", {"class": "blogcard"}),
-						[createElem("div", {"class": "blogcard-content"}),
-							[createElem("div", {"class": "blogcard-text"}),
-								createElem("div", {"class": "blogcard-title"}),
+					[createElem("div", {"class": "blogcard"}, ""),
+						[createElem("div", {"class": "blogcard-content"}, ""),
+							[createElem("div", {"class": "blogcard-text"}, ""),
+								createElem("div", {"class": "blogcard-title"}, ""),
 									createElem("a", {"href": ogp.url, "target": "_blank"}, ogp.title)
 							],
-								createElem("blockquote", {"cite": ogp.url}),
+								createElem("blockquote", {"cite": ogp.url}, ""),
 									createElem("div", {"class": "blogcard-description"}, ogp.desp)
 						],
-							createElem("div", {"class": "blogcard-image"}),
-								createElem("div", {"class": "blogcard-image-wrapper"}),
-									createElem("a", {"href": ogp.url, "target": "_blank"}),
-										createElem("img", {"alt": "", "height": "132", "width": "200", "src": ogp.img})
+							createElem("div", {"class": "blogcard-image"}, ""),
+								createElem("div", {"class": "blogcard-image-wrapper"}, ""),
+									createElem("a", {"href": ogp.url, "target": "_blank"}, ""),
+										createElem("img", {"alt": "", "height": "132", "width": "200", "src": ogp.img}, "")
 					],
-						createElem("div", {"class": "blogcard-footer"}),
-							[createElem("a", {"href": ogp.domain, "target": "_blank"}),
-								createElem("img", {"alt": "", "src": "https://www.google.com/s2/favicons?domain={}".replace("{}", ogp.domain)})
+						createElem("div", {"class": "blogcard-footer"}, ""),
+							[createElem("a", {"href": ogp.domain, "target": "_blank"}, ""),
+								createElem("img", {"alt": "", "src": "https://www.google.com/s2/favicons?domain={}".replace("{}", ogp.domain)}, "")
 							],
 								createTxtNode(ogp.domain)
 				]) // ルートノードから始まる、ツリーにするノードの配列。サムネイル画像サイズは決め打ちしている。
@@ -75,7 +75,7 @@ const bookmarkletfunc = () => {
 		return root  // 木のルートを返す。
 	}
 	function onCopy(ev) {  // イベントリスナー。	
-		html = root.outerHTML;  // ツリーをHTML文字列に変換する。
+		let html = root.outerHTML;  // ツリーをHTML文字列に変換する。
 		ev.clipboardData.setData("text/plain", html);  // textとしてペーストするとき。必須。これがないとクリップボードに何も渡されない。
 		ev.clipboardData.setData("text/html", html);  // htmlとしてペーストするとき。
 		ev.preventDefault();  // デフォルトの動作を止める。そうしないとクリップボードに元の値が入ってしまう。
