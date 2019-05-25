@@ -14,10 +14,11 @@ ALL : $(MODULE_NAME)
 
 $(OUT_MINIFIED)/$(MODULE_NAME).min.js : $(JS_SRCS)
 	-$(MKDIR) $(@D)
-	$(JAVA_JAR) $(COMPILER) --js $< --create_source_map $(@D)/$(MODULE_NAME).map --js_output_file $(@D)/$(MODULE_NAME).min.js
+	$(JAVA_JAR) $(COMPILER) --language_out ECMASCRIPT_2015 --js $^ --create_source_map $(@D)/$(MODULE_NAME).map --js_output_file $(@D)/$(MODULE_NAME).min.js
 
 $(MODULE_NAME) : $(OUT_MINIFIED)/$(MODULE_NAME).min.js
 
 .PHONY: clean
 clean :
-	-$(DELRECURSIVE) $(OUT_MINIFIED)
+	-$(DELRECURSIVE) $(OUT_MINIFIED)/*.min.js
+	-$(DELRECURSIVE) $(OUT_MINIFIED)/*.map
