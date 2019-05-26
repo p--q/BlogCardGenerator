@@ -47,6 +47,6 @@ window['bookmarkletfunc'] = mydomain => {  // 引数は引用符をつけない�
 		elem.parentNode.insertBefore(elem.firstElementChild, elem);  // <blockquote>の子要素を親要素に付け替える。
 		elem.parentNode.removeChild(elem);  // <blockquote></blockquote>を削除。
 	}
-	onCopy(root.outerHTML);  // ツリーをHTML文字列に変換する。
+	onCopy(root.outerHTML);  // ツリーをHTML文字列に変換してクリップボードにコピー。
 	function getOGP(txt){return document.evaluate("//meta[@property='og:{}']/@content".replace("{}", txt), document, null, XPathResult.STRING_TYPE, null).stringValue;}
 };
