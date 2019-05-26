@@ -1,8 +1,6 @@
 import onCopy from "./oncopy.js";
-
-
-window['bookmarkletfunc'] = () => {
-	const mydomain = "p--q.blogspot.com";  // 引用符をつけないドメイン。
+import { createElem as E, createTxtNode as T, createTree } from "./tree.js";
+window['bookmarkletfunc'] = mydomain => {  // 引数は引用符をつけないドメイン。例: p--q.blogspot.com
 	let elem; // 要素を入れる変数。
 	let selectedtxt = window.getSelection().toString();  // 選択文字列を取得。
 	let ogp = {
@@ -16,25 +14,25 @@ window['bookmarkletfunc'] = () => {
 		ogp.img = location.protocol + "//" + ogp.domain + ogp.img;
 	}
 	let root = createTree([
-					[createElem("div", {"class": "blogcard"}),
-						[createElem("div", {"class": "blogcard-content"}),
-							[createElem("div", {"class": "blogcard-text"}),
-								createElem("div", {"class": "blogcard-title"}),
-									createElem("a", {"href": ogp.url, "target": "_blank"}, ogp.title)
+					[E("div", {"class": "blogcard"}),
+						[E("div", {"class": "blogcard-content"}),
+							[E("div", {"class": "blogcard-text"}),
+								E("div", {"class": "blogcard-title"}),
+									E("a", {"href": ogp.url, "target": "_blank"}, ogp.title)
 							],
-								createElem("blockquote", {"cite": ogp.url}),
-									createElem("div", {"class": "blogcard-description"}, ogp.desp)
+								E("blockquote", {"cite": ogp.url}),
+									E("div", {"class": "blogcard-description"}, ogp.desp)
 						],
-							createElem("div", {"class": "blogcard-image"}),
-								createElem("div", {"class": "blogcard-image-wrapper"}),
-									createElem("a", {"href": ogp.url, "target": "_blank"}),
-										createElem("img", {"alt": "", "height": "132", "width": "200", "src": ogp.img})
+							E("div", {"class": "blogcard-image"}),
+								E("div", {"class": "blogcard-image-wrapper"}),
+									E("a", {"href": ogp.url, "target": "_blank"}),
+										E("img", {"alt": "", "height": "100", "width": "100", "src": ogp.img})
 					],
-						createElem("div", {"class": "blogcard-footer"}),
-							[createElem("a", {"href": ogp.domain, "target": "_blank"}),
-								createElem("img", {"alt": "", "src": "https://www.google.com/s2/favicons?domain={}".replace("{}", ogp.domain)})
+						E("div", {"class": "blogcard-footer"}),
+							[E("a", {"href": ogp.domain, "target": "_blank"}),
+								E("img", {"alt": "", "src": "https://www.google.com/s2/favicons?domain={}".replace("{}", ogp.domain)})
 							],
-								createTxtNode(ogp.domain)
+								T(ogp.domain)
 				]) // ルートノードから始まる、ツリーにするノードの配列。サムネイル画像サイズは決め打ちしている。
 	if (!ogp.img) { // OGP画像ないとき。		
 		root.classList.add("blogcard-hasnoimage");  // ルートノードのクラス名を追加。
@@ -49,38 +47,6 @@ window['bookmarkletfunc'] = () => {
 		elem.parentNode.insertBefore(elem.firstElementChild, elem);  // <blockquote>の子要素を親要素に付け替える。
 		elem.parentNode.removeChild(elem);  // <blockquote></blockquote>を削除。
 	}
-	
-	
-
-	
 	onCopy(root.outerHTML);  // ツリーをHTML文字列に変換する。
-	
-//	document.addEventListener("copy", onCopy, true);  // targetは何でもよいので、capture phase、つまりドキュメントから行きの伝播を捉える。
-//	document.execCommand("copy");   // コピーイベントを発生させる。
-//	document.removeEventListener("copy", onCopy, true);  // リスナーの除去。
 	function getOGP(txt){return document.evaluate("//meta[@property='og:{}']/@content".replace("{}", txt), document, null, XPathResult.STRING_TYPE, null).stringValue;}
-	function createElem(tag, props, txt=""){  // タグ名、プロパティの辞書、テキストノードにするテキスト。
-		let elem = document.createElement(tag);  // 要素を作成。
-		Object.keys(props).forEach(k => elem.setAttribute(k, props[k]));  // 要素のプロパティを設定。				
-		txt && elem.appendChild(createTxtNode(txt));  // テキストノードがあれば挿入。		
-		return elem;  // 要素を返す。
-	}
-	function createTxtNode(txt){return document.createTextNode(txt);}  // テキストノードを返す。
-	function createTree(nodes){  // ノードの配列を受け取って、再帰的に子要素にしてツリーにして返す。二分木しか作れない。[[A,B,C,D],E,F,G]を渡した場合、BとEの親がAとなる。
-		let root;  // ルートを入れる変数。
-		nodes.reduce((prev, curr) => {  // prevが親、currが子。
-					if (Array.isArray(prev)){  // 親が配列のときはまず子のツリーを作る。
-						prev = createTree(prev);  // 配列をツリーにしたルートを取得。
-					} 		
-					if (!root) {  // ルートがまだ取得できていないとき。
-						root = prev;  // 最初のツリーのルートをこのツリーのルートとして取得。
-					}
-					if (Array.isArray(curr)){  // 子が配列のときはまず子のツリーを作る。
-						curr = createTree(curr);  // 配列をツリーにしたルートを取得。
-					} 					
-					return prev.appendChild(curr);  // 子要素currを返す。
-					 }); 			
-		return root  // 木のルートを返す。
-	}
-
 };
