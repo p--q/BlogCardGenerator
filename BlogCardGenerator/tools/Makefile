@@ -7,6 +7,7 @@ COMPILER=~/bin/compiler-latest/closure-compiler-v20190513.jar
 SCRIPT=$(PROJECT_HOME)/script
 JS_SRCS:=$(wildcard $(SCRIPT)/*.js)
 MODULE_NAME=$(shell echo $(PROJECT_NAME) | tr A-Z a-z)
+COMPILERFLAGS=--language_out ECMASCRIPT_2015 --isolation_mode IIFE --compilation_level ADVANCED
 
 # Targets
 .PHONY: ALL
@@ -14,7 +15,7 @@ ALL : $(MODULE_NAME)
 
 $(OUT_MINIFIED)/$(MODULE_NAME).min.js : $(JS_SRCS)
 	-$(MKDIR) $(@D)
-	$(JAVA_JAR) $(COMPILER) --language_out ECMASCRIPT_2015 --js $^ --create_source_map $(@D)/$(MODULE_NAME).map --js_output_file $(@D)/$(MODULE_NAME).min.js
+	$(JAVA_JAR) $(COMPILER) $(COMPILERFLAGS) --js $^ --create_source_map $(@D)/$(MODULE_NAME).map --js_output_file $(@D)/$(MODULE_NAME).min.js
 
 $(MODULE_NAME) : $(OUT_MINIFIED)/$(MODULE_NAME).min.js
 

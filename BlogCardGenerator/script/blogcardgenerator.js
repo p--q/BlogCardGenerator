@@ -1,6 +1,7 @@
 import onCopy from "./oncopy.js";
 
-const bookmarkletfunc = () => {
+
+window['bookmarkletfunc'] = () => {
 	const mydomain = "p--q.blogspot.com";  // 引用符をつけないドメイン。
 	let elem; // 要素を入れる変数。
 	let selectedtxt = window.getSelection().toString();  // 選択文字列を取得。
